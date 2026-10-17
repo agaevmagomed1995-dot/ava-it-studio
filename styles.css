@@ -376,72 +376,6 @@ body {
     transform: translateX(4px);
 }
 
-/* Portfolio */
-.portfolio {
-    padding: 100px 0;
-    background: var(--white);
-}
-
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-    margin-top: 48px;
-}
-
-.portfolio-item {
-    border-radius: 16px;
-    overflow: hidden;
-    background: white;
-    border: 1px solid var(--border);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    opacity: 0;
-    transform: translateY(40px);
-}
-
-.portfolio-item.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.portfolio-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
-
-.portfolio-image {
-    height: 280px;
-    overflow: hidden;
-    background: #f8fafc;
-}
-
-.portfolio-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
-    transition: transform 0.6s ease;
-}
-
-.portfolio-item:hover .portfolio-image img {
-    transform: scale(1.05);
-}
-
-.portfolio-info {
-    padding: 24px;
-}
-
-.portfolio-info h3 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.portfolio-info p {
-    font-size: 14px;
-    color: var(--gray);
-}
-
 /* Process */
 .process {
     padding: 40px 0;
@@ -493,17 +427,69 @@ body {
 }
 
 .about h2 {
-    font-size: 36px;
-    font-weight: 700;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
     margin-bottom: 20px;
-    max-width: 600px;
+    max-width: 720px;
+}
+
+.about .eyebrow {
+    margin-bottom: 12px;
 }
 
 .about p {
-    max-width: 640px;
+    max-width: 720px;
     color: var(--gray);
     margin-bottom: 16px;
     font-size: 16px;
+}
+
+.about h3 {
+    margin: 36px 0 16px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.expect-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.expect-item {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 20px;
+    background: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.expect-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+}
+
+.expect-item h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.expect-item p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.about-close {
+    margin-top: 28px;
+    color: var(--black);
+    font-weight: 600;
+}
+
+.about-close a {
+    color: var(--blue);
+    text-underline-offset: 3px;
 }
 
 /* Pricing */
@@ -593,7 +579,82 @@ body {
     border-top: 1px solid var(--border);
 }
 
-/* Animations */
+/* Portfolio */
+.portfolio {
+    padding: 100px 0;
+    background: var(--white);
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-top: 48px;
+}
+
+.portfolio-item {
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid var(--border);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+.portfolio-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.portfolio-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.portfolio-image {
+    height: 280px;
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+.portfolio-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.6s ease;
+}
+
+.portfolio-item:hover .portfolio-image img {
+    transform: scale(1.05);
+}
+
+.portfolio-info {
+    padding: 24px;
+}
+
+.portfolio-info h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.portfolio-info p {
+    font-size: 14px;
+    color: var(--gray);
+}
+
+@media (max-width: 768px) {
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .portfolio-image {
+        height: 220px;
+    }
+}
+
 .fade-up {
     opacity: 0;
     transform: translateY(20px);
@@ -619,6 +680,9 @@ body {
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    .expect-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
     .hero-visual {
         height: 360px;
     }
@@ -634,12 +698,11 @@ body {
     .services-grid {
         grid-template-columns: 1fr;
     }
-    .portfolio-grid {
+    .expect-grid {
         grid-template-columns: 1fr;
-        gap: 24px;
     }
-    .portfolio-image {
-        height: 220px;
+    .about h2 {
+        font-size: 32px;
     }
     .section-header {
         flex-direction: column;
