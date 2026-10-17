@@ -305,17 +305,134 @@
         </div>
     </section>
 
-    <section id="contact" class="cta-footer">
-        <div class="container">
-            <h2>Let’s build what’s next for your business.</h2>
-            <a href="mailto:hello@ava-it.studio" class="btn btn-white">Let’s find out →</a>
-            <div class="footer-info">AVA · DUBAI, UAE</div>
+    <section id="contact" class="request">
+        <div class="container request-grid">
+            <div class="request-copy">
+                <p class="eyebrow">NEW PROJECT</p>
+                <h2>Discuss your project.</h2>
+                <p>Tell us what you need. We reply with a clear scope, timeline and a starting price — usually within one business day.</p>
+                <ol class="request-points">
+                    <li><strong>01</strong> You describe the job</li>
+                    <li><strong>02</strong> We confirm scope and price</li>
+                    <li><strong>03</strong> Work starts after you approve</li>
+                </ol>
+                <p class="request-mail">Or write directly to <a href="mailto:hello@ava-it.studio">hello@ava-it.studio</a></p>
+            </div>
+
+            <form class="request-form" id="request-form" novalidate>
+                <div class="form-progress" aria-hidden="true">
+                    <span class="is-on" data-dot="1"></span>
+                    <span data-dot="2"></span>
+                    <span data-dot="3"></span>
+                </div>
+
+                <fieldset class="form-step is-active" data-step="1">
+                    <legend>What do you need?</legend>
+                    <div class="choice-grid" id="service-choices">
+                        <label class="choice"><input type="checkbox" name="service" value="Landing page"><span>Landing page</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="Corporate website"><span>Corporate website</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="E-commerce"><span>E-commerce</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="Web app / MVP"><span>Web app / MVP</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="Mobile app"><span>Mobile app</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="UX/UI design"><span>UX/UI design</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="CRM"><span>CRM</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="Automation"><span>Automation</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="AI bot or receptionist"><span>AI bot / receptionist</span></label>
+                        <label class="choice"><input type="checkbox" name="service" value="Support or redesign"><span>Support / redesign</span></label>
+                    </div>
+                    <label class="field">
+                        <span>About the project</span>
+                        <textarea name="details" rows="4" required placeholder="What should it do, and who is it for?"></textarea>
+                    </label>
+                    <p class="form-error" data-error="1"></p>
+                    <button type="button" class="btn btn-primary" data-next>Continue →</button>
+                </fieldset>
+
+                <fieldset class="form-step" data-step="2">
+                    <legend>Scope</legend>
+                    <label class="field">
+                        <span>Budget, AED</span>
+                        <select name="budget" required>
+                            <option value="">Select a range</option>
+                            <option>Under 2,500</option>
+                            <option>2,500 – 8,000</option>
+                            <option>8,000 – 15,000</option>
+                            <option>15,000 – 30,000</option>
+                            <option>30,000+</option>
+                            <option>Not sure yet</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>When do you want to start?</span>
+                        <select name="timeline" required>
+                            <option value="">Select a timeline</option>
+                            <option>As soon as possible</option>
+                            <option>Within 2 weeks</option>
+                            <option>This month</option>
+                            <option>Just exploring</option>
+                        </select>
+                    </label>
+                    <label class="field">
+                        <span>Current website, if you have one</span>
+                        <input type="url" name="website" placeholder="https://">
+                    </label>
+                    <p class="form-error" data-error="2"></p>
+                    <div class="form-nav">
+                        <button type="button" class="btn btn-link" data-back>← Back</button>
+                        <button type="button" class="btn btn-primary" data-next>Continue →</button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-step" data-step="3">
+                    <legend>How can we reach you?</legend>
+                    <div class="field-row">
+                        <label class="field">
+                            <span>Name</span>
+                            <input type="text" name="name" required autocomplete="name" placeholder="Your name">
+                        </label>
+                        <label class="field">
+                            <span>Company</span>
+                            <input type="text" name="company" autocomplete="organization" placeholder="Optional">
+                        </label>
+                    </div>
+                    <div class="field-row">
+                        <label class="field">
+                            <span>Email</span>
+                            <input type="email" name="email" required autocomplete="email" placeholder="you@company.com">
+                        </label>
+                        <label class="field">
+                            <span>Phone or WhatsApp</span>
+                            <input type="tel" name="phone" autocomplete="tel" placeholder="+971">
+                        </label>
+                    </div>
+                    <label class="field">
+                        <span>Preferred contact</span>
+                        <select name="contact">
+                            <option>Email</option>
+                            <option>WhatsApp</option>
+                            <option>Phone call</option>
+                        </select>
+                    </label>
+                    <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+                    <p class="form-error" data-error="3"></p>
+                    <div class="form-nav">
+                        <button type="button" class="btn btn-link" data-back>← Back</button>
+                        <button type="submit" class="btn btn-primary">Send request →</button>
+                    </div>
+                </fieldset>
+
+                <div class="form-success" hidden>
+                    <h3>Request received.</h3>
+                    <p>We’ll review it and reply with the next step. If you don’t hear back within one business day, write to hello@ava-it.studio.</p>
+                    <button type="button" class="btn btn-link" data-reset>Send another request</button>
+                </div>
+            </form>
         </div>
     </section>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 A V A Information Technology Network Services Co. L.L.C. All rights reserved.</p>
+            <p>AVA · Dubai, UAE · &copy; 2026 A V A Information Technology Network Services Co. L.L.C.</p>
         </div>
     </footer>
 
