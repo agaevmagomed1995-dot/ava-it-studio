@@ -579,6 +579,25 @@ body {
     border-top: 1px solid var(--border);
 }
 
+.ai-feature {
+    padding: 40px 0 10px;
+}
+
+.ai-shot {
+    margin: 8px 0 0;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    box-shadow: 0 24px 60px rgba(17, 24, 39, 0.08);
+}
+
+.ai-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 /* Portfolio */
 .portfolio {
     padding: 100px 0;
