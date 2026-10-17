@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
             }
         });
@@ -21,6 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.transform = 'translateY(30px)';
         card.style.transition = `all 0.6s ease ${index * 0.1}s`;
         observer.observe(card);
+    });
+
+    // Animate portfolio items
+    document.querySelectorAll('.portfolio-item').forEach((item, index) => {
+        item.style.transition = `all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 0.15}s`;
+        observer.observe(item);
     });
 
     // Animate other elements
