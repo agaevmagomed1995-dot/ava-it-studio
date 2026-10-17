@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.service-card, .portfolio-item, .expect-item, .about, .pricing, .process').forEach((el, i) => {
+    document.querySelectorAll('.service-card, .portfolio-item, .expect-item, .ai-shot, .about, .pricing, .process').forEach((el, i) => {
         el.style.setProperty('--d', `${(i % 6) * 70}ms`);
         if (!reduce) el.classList.add('reveal');
         observer.observe(el);
