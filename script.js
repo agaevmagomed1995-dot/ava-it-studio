@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (details.length < 12) return fail(1, 'Add a short description — a sentence is enough.');
             }
             if (step === 2) {
-                if (!form.budget.value || !form.timeline.value) return fail(2, 'Select a budget and a timeline.');
+                if (!form.timeline.value) return fail(2, 'Select a timeline.');
             }
             show(step + 1);
         });
@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
             company: form.company.value.trim(),
             phone: form.phone.value.trim(),
             contact: form.contact.value,
-            budget: form.budget.value,
             timeline: form.timeline.value,
             website: form.website.value.trim(),
             services: services.join(', '),
@@ -137,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const body = [
             `Services: ${payload.services}`,
-            `Budget: ${payload.budget}`,
             `Timeline: ${payload.timeline}`,
             `Website: ${payload.website || '—'}`,
             `Company: ${payload.company || '—'}`,
