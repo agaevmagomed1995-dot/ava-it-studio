@@ -1,61 +1,69 @@
-// Scroll animations
 document.addEventListener('DOMContentLoaded', () => {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('in');
+            observer.unobserve(entry.target);
         });
-    }, observerOptions);
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    // Animate service cards
-    document.querySelectorAll('.service-card').forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-        observer.observe(card);
-    });
-
-    // Animate portfolio items
-    document.querySelectorAll('.portfolio-item').forEach((item, index) => {
-        item.style.transition = `all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 0.15}s`;
-        observer.observe(item);
-    });
-
-    // Animate other elements
-    document.querySelectorAll('.about, .pricing').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.7s ease';
+    document.querySelectorAll('.service-card, .portfolio-item, .expect-item, .about, .pricing, .process').forEach((el, i) => {
+        el.style.setProperty('--d', `${(i % 6) * 70}ms`);
+        if (!reduce) el.classList.add('reveal');
         observer.observe(el);
     });
 
-    // Hero shape hover interaction
-    const shapes = document.querySelectorAll('.shape');
-    shapes.forEach(shape => {
-        shape.addEventListener('mouseenter', () => {
-            shape.style.transform = 'scale(1.05) rotate(0deg)';
-        });
-        shape.addEventListener('mouseleave', () => {
-            shape.style.transform = '';
-        });
-    });
-
-    // Smooth header shadow on scroll
     const header = document.querySelector('.header');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 20) {
-            header.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
-        } else {
-            header.style.boxShadow = 'none';
-        }
+    const links = [...document.querySelectorAll('.nav a')];
+    const sections = links
+        .map((a) => document.querySelector(a.getAttribute('href')))
+        .filter(Boolean);
+
+    const onScroll = () => {
+        header.classList.toggle('scrolled', window.scrollY > 12);
+        const y = window.scrollY + 120;
+        let current = sections[0];
+        sections.forEach((sec) => {
+            if (sec.offsetTop <= y) current = sec;
+        });
+        links.forEach((a) => a.classList.toggle('active', current && a.getAttribute('href') === `#${current.id}`));
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    const steps = [...document.querySelectorAll('.process-steps .step')];
+    if (steps.length && !reduce) {
+        let i = 0;
+        const tick = () => {
+            steps.forEach((s, n) => s.classList.toggle('is-live', n === i));
+            i = (i + 1) % steps.length;
+        };
+        tick();
+        setInterval(tick, 1600);
+    }
+
+    const visual = document.querySelector('.abstract-shape');
+    const hero = document.querySelector('.hero');
+    if (visual && hero && !reduce && window.matchMedia('(pointer: fine)').matches) {
+        hero.addEventListener('pointermove', (e) => {
+            const r = hero.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width - 0.5;
+            const y = (e.clientY - r.top) / r.height - 0.5;
+            visual.style.transform = `translate(${x * 18}px, ${y * 12}px)`;
+        });
+        hero.addEventListener('pointerleave', () => {
+            visual.style.transform = '';
+        });
+    }
+
+    document.querySelectorAll('.btn-primary, .btn-white').forEach((btn) => {
+        btn.addEventListener('pointermove', (e) => {
+            if (reduce) return;
+            const r = btn.getBoundingClientRect();
+            btn.style.setProperty('--mx', `${e.clientX - r.left}px`);
+            btn.style.setProperty('--my', `${e.clientY - r.top}px`);
+        });
     });
 });
