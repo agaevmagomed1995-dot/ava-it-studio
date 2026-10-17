@@ -579,19 +579,6 @@ body {
     border-top: 1px solid var(--border);
 }
 
-.portfolio-item-wide {
-    grid-column: 1 / -1;
-}
-
-.portfolio-item-wide .portfolio-image {
-    height: auto;
-}
-
-.portfolio-item-wide .portfolio-image img {
-    height: auto;
-    object-fit: contain;
-}
-
 /* Portfolio */
 .portfolio {
     padding: 100px 0;
