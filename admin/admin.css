@@ -5,6 +5,7 @@
     --line: #e5e7eb;
     --bg: #f8fafc;
 }
+[hidden] { display: none !important; }
 * { box-sizing: border-box; }
 body {
     margin: 0;
