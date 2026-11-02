@@ -103,10 +103,20 @@ function render() {
             <select id="status">${Object.entries(labels).map(([key, label]) => `<option value="${key}" ${key === lead.status ? 'selected' : ''}>${label}</option>`).join('')}</select>
         </label>
         <label>Заметка<textarea id="note">${esc(lead.note || '')}</textarea></label>
-        <button class="btn" id="save" type="button">Сохранить</button>`;
+        <button class="btn" id="save" type="button">Сохранить</button>
+        <button class="btn ghost" id="remove" type="button">Удалить</button>`;
     document.getElementById('save').onclick = saveLead;
+    document.getElementById('remove').onclick = removeLead;
 }
 
+async function removeLead() {
+    const id = state.selected;
+    if (!id || !confirm('Удалить эту заявку?')) return;
+    await api('/api/crm', { method: 'DELETE', body: JSON.stringify({ id }) });
+    state.data.leads = state.data.leads.filter((item) => item.id !== id);
+    state.selected = null;
+    render();
+}
 async function saveLead() {
     const lead = state.data.leads.find((item) => item.id === state.selected);
     const updated = await api('/api/crm', {
