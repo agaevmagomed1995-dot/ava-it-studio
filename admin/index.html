@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>AVA · Заявки</title>
+    <link rel="stylesheet" href="/admin/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main id="login" class="login" hidden>
+        <form id="login-form" class="login-card">
+            <p class="eyebrow">AVA IT STUDIO</p>
+            <h1>Вход в заявки</h1>
+            <label>Пароль<input type="password" name="password" autocomplete="current-password" required></label>
+            <p class="error" id="login-error"></p>
+            <button class="btn" type="submit">Войти</button>
+        </form>
+    </main>
+
+    <div id="app" hidden>
+        <header class="top">
+            <div>
+                <p class="eyebrow">AVA IT STUDIO</p>
+                <h1>Заявки</h1>
+            </div>
+            <button class="btn ghost" id="logout" type="button">Выйти</button>
+        </header>
+
+        <section class="period">
+            <button type="button" data-period="7">7 дней</button>
+            <button type="button" data-period="30" class="on">30 дней</button>
+            <button type="button" data-period="all">Всё время</button>
+        </section>
+
+        <section class="stats" id="stats"></section>
+        <section class="chart-card">
+            <div class="chart-head">
+                <h2>Конверсия по дням</h2>
+                <p>Серые — визиты, синие — заявки</p>
+            </div>
+            <div class="chart" id="chart"></div>
+        </section>
+
+        <section class="board">
+            <div class="board-head">
+                <div class="filters" id="filters">
+                    <button type="button" data-status="all" class="on">Все</button>
+                    <button type="button" data-status="new">Новые</button>
+                    <button type="button" data-status="contacted">Связались</button>
+                    <button type="button" data-status="working">В работе</button>
+                    <button type="button" data-status="won">Сделка</button>
+                    <button type="button" data-status="lost">Отказ</button>
+                </div>
+                <input id="search" type="search" placeholder="Имя, почта или телефон">
+            </div>
+            <div class="layout">
+                <div id="list" class="list"></div>
+                <aside id="detail" class="detail">
+                    <p class="muted">Выберите заявку слева.</p>
+                </aside>
+            </div>
+        </section>
+    </div>
+    <script src="/admin/admin.js"></script>
+</body>
+</html>
