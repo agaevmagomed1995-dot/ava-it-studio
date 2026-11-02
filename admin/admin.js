@@ -140,15 +140,22 @@ async function load() {
 
 document.getElementById('login-form').onsubmit = async (event) => {
     event.preventDefault();
-    document.getElementById('login-error').textContent = '';
+    const error = document.getElementById('login-error');
+    const button = event.target.querySelector('button');
+    error.textContent = '';
+    button.disabled = true;
+    button.textContent = 'Входим…';
     try {
         await api('/api/auth', {
             method: 'POST',
             body: JSON.stringify({ password: event.target.password.value }),
         });
         await load();
-    } catch {
-        document.getElementById('login-error').textContent = 'Неверный пароль.';
+        window.scrollTo(0, 0);
+    } catch (err) {
+        error.textContent = err.status === 401 ? 'Неверный пароль.' : 'Не удалось войти. Обновите страницу и попробуйте ещё раз.';
+        button.disabled = false;
+        button.textContent = 'Войти';
     }
 };
 
