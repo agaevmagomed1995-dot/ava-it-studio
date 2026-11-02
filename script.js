@@ -70,6 +70,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('request-form');
     if (!form) return;
 
+    const visitor = localStorage.getItem('ava_vid') || crypto.randomUUID().replace(/-/g, '');
+    localStorage.setItem('ava_vid', visitor);
+    const track = (type) => {
+        fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, vid: visitor }),
+            keepalive: true,
+        }).catch(() => {});
+    };
+    track('view');
+    form.addEventListener('focusin', () => track('start'), { once: true });
+
     const formSteps = [...form.querySelectorAll('.form-step')];
     const dots = [...form.querySelectorAll('.form-progress span')];
     const success = form.querySelector('.form-success');
@@ -145,19 +158,28 @@ document.addEventListener('DOMContentLoaded', () => {
             payload.message,
         ].join('\n');
 
-        let sent = false;
+        let saved = false;
+        let mailed = false;
         try {
-            const res = await fetch('https://formsubmit.co/ajax/hello@ava-it.studio', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify(payload),
-            });
-            sent = res.ok;
+            const [leadRes, mailRes] = await Promise.all([
+                fetch('/api/lead', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify(payload),
+                }),
+                fetch('https://formsubmit.co/ajax/hello@ava-it.studio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify(payload),
+                }),
+            ]);
+            saved = leadRes.ok;
+            mailed = mailRes.ok;
         } catch (_) {
-            sent = false;
+            saved = false;
         }
 
-        if (!sent) {
+        if (!saved && !mailed) {
             const mailto = `mailto:hello@ava-it.studio?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailto;
         }
