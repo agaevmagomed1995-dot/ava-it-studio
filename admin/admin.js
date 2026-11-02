@@ -112,7 +112,7 @@ function render() {
 async function removeLead() {
     const id = state.selected;
     if (!id || !confirm('Удалить эту заявку?')) return;
-    await api('/api/crm', { method: 'DELETE', body: JSON.stringify({ id }) });
+    await api('/api/crm', { method: 'POST', body: JSON.stringify({ action: 'delete', id }) });
     state.data.leads = state.data.leads.filter((item) => item.id !== id);
     state.selected = null;
     render();
