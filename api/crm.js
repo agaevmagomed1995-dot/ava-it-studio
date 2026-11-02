@@ -34,9 +34,17 @@ function sum(state, keys) {
 export default async function handler(req, res) {
   if (!isAuthed(req)) return res.status(401).json({ ok: false });
   const state = await readState();
+  const demo = state.leads.some((item) => item.email === 'test@avaitstudio.ae');
+  if (demo) {
+    state.leads = state.leads.filter((item) => item.email !== 'test@avaitstudio.ae');
+    state.days = {};
+    state.seen = {};
+    await writeState(state);
+  }
 
-  if (req.method === 'DELETE') {
+  if (req.method === 'POST') {
     const data = body(req);
+    if (data.action !== 'delete') return res.status(400).json({ ok: false });
     const before = state.leads.length;
     state.leads = state.leads.filter((item) => item.id !== data.id);
     if (state.leads.length === before) return res.status(404).json({ ok: false });
