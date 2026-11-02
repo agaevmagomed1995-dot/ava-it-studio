@@ -35,6 +35,15 @@ export default async function handler(req, res) {
   if (!isAuthed(req)) return res.status(401).json({ ok: false });
   const state = await readState();
 
+  if (req.method === 'DELETE') {
+    const data = body(req);
+    const before = state.leads.length;
+    state.leads = state.leads.filter((item) => item.id !== data.id);
+    if (state.leads.length === before) return res.status(404).json({ ok: false });
+    await writeState(state);
+    return res.status(200).json({ ok: true });
+  }
+
   if (req.method === 'PATCH') {
     const data = body(req);
     const lead = state.leads.find((item) => item.id === data.id);
