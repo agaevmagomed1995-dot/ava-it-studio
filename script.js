@@ -1,5 +1,5 @@
 const GOOGLE_ADS_ID = 'AW-18500180690';
-const GOOGLE_ADS_CONVERSION_LABEL = '';
+const GOOGLE_ADS_CONVERSION_LABEL = 'pu78CLu0yLEdENK1yfVE';
 
 function reportLeadConversion(transactionId) {
     const label = String(GOOGLE_ADS_CONVERSION_LABEL || '').trim();
