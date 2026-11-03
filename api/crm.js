@@ -63,18 +63,23 @@ export default async function handler(req, res) {
   const week = rangeDays(7, today);
   const month = rangeDays(30, today);
   const allKeys = Object.keys(state.days);
+  const periods = {
+    '7': sum(state, week),
+    '30': sum(state, month),
+    all: sum(state, allKeys),
+  };
+  for (const [name, keys] of [['7', week], ['30', month]]) {
+    periods[name].leads = leads.filter((lead) => keys.includes(dayKey(lead.createdAt))).length;
+  }
+  periods.all.leads = leads.length;
   res.status(200).json({
     ok: true,
     today,
-    periods: {
-      '7': sum(state, week),
-      '30': sum(state, month),
-      all: sum(state, allKeys),
-    },
+    periods,
     series: month.map((key) => ({
       day: key.slice(5),
       uniques: state.days[key]?.uniques || 0,
-      leads: state.days[key]?.leads || 0,
+      leads: leads.filter((lead) => dayKey(lead.createdAt) === key).length,
     })),
     leads,
   });
