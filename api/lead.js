@@ -46,40 +46,5 @@ export default async function handler(req, res) {
   } catch {
     /* the lead file is already saved */
   }
-  await Promise.race([
-    notify(lead),
-    new Promise((resolve) => setTimeout(resolve, 2000)),
-  ]);
   res.status(200).json({ ok: true });
-}
-
-function notify(lead) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 2500);
-  const lines = [
-    `Name: ${lead.name}`,
-    `Email: ${lead.email}`,
-    `Phone: ${lead.phone || '—'}`,
-    `Company: ${lead.company || '—'}`,
-    `Services: ${lead.services || '—'}`,
-    `Timeline: ${lead.timeline || '—'}`,
-    `Website: ${lead.website || '—'}`,
-    `Preferred contact: ${lead.contact || '—'}`,
-    '',
-    lead.message || '',
-  ];
-  return fetch('https://formsubmit.co/ajax/ava.magomed@gmail.com', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({
-      name: lead.name,
-      email: lead.email,
-      message: lines.join('\n'),
-      _subject: `AVA project request — ${lead.name}`,
-      _template: 'table',
-      _captcha: 'false',
-      _replyto: lead.email,
-    }),
-    signal: controller.signal,
-  }).catch(() => {}).finally(() => clearTimeout(timer));
 }
