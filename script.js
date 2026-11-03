@@ -1,3 +1,18 @@
+const GOOGLE_ADS_ID = 'AW-18500180690';
+const GOOGLE_ADS_CONVERSION_LABEL = '';
+
+function reportLeadConversion(transactionId) {
+    const label = String(GOOGLE_ADS_CONVERSION_LABEL || '').trim();
+    if (!label || typeof window.gtag !== 'function') return false;
+    window.gtag('event', 'conversion', {
+        send_to: `${GOOGLE_ADS_ID}/${label}`,
+        value: 1.0,
+        currency: 'AED',
+        transaction_id: transactionId,
+    });
+    return true;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -126,6 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!form.email.checkValidity()) return fail(3, 'Enter a valid email.');
 
+        if (form.dataset.sending === '1') return;
+        form.dataset.sending = '1';
+
         const services = [...form.querySelectorAll('input[name="service"]:checked')].map((el) => el.value);
         const payload = {
             name: form.name.value.trim(),
@@ -160,48 +178,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let saved = false;
         let mailed = false;
+        const transactionId = (window.crypto?.randomUUID?.() || `lead-${Date.now()}`);
         try {
             const mailController = new AbortController();
             const mailTimer = setTimeout(() => mailController.abort(), 8000);
-            const [leadRes, mailRes] = await Promise.all([
-                fetch('/api/lead', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                    body: JSON.stringify(payload),
+            const leadPromise = fetch('/api/lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify(payload),
+            }).then((res) => res.ok).catch(() => false);
+            const mailPromise = fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                signal: mailController.signal,
+                body: JSON.stringify({
+                    access_key: '7621f476-7d24-4f65-b945-1d391fc9c612',
+                    subject: payload._subject,
+                    from_name: 'AVA IT Studio',
+                    name: payload.name,
+                    email: payload.email,
+                    phone: payload.phone || '—',
+                    company: payload.company || '—',
+                    services: payload.services || '—',
+                    timeline: payload.timeline || '—',
+                    website: payload.website || '—',
+                    contact: payload.contact || '—',
+                    message: body,
                 }),
-                fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                    signal: mailController.signal,
-                    body: JSON.stringify({
-                        access_key: '7621f476-7d24-4f65-b945-1d391fc9c612',
-                        subject: payload._subject,
-                        from_name: 'AVA IT Studio',
-                        name: payload.name,
-                        email: payload.email,
-                        phone: payload.phone || '—',
-                        company: payload.company || '—',
-                        services: payload.services || '—',
-                        timeline: payload.timeline || '—',
-                        website: payload.website || '—',
-                        contact: payload.contact || '—',
-                        message: body,
-                    }),
-                }).catch(() => null),
-            ]);
+            }).then(async (res) => {
+                if (!res.ok) return false;
+                const mailData = await res.json().catch(() => ({}));
+                return mailData.success !== false;
+            }).catch(() => false);
+            [saved, mailed] = await Promise.all([leadPromise, mailPromise]);
             clearTimeout(mailTimer);
-            saved = leadRes.ok;
-            if (mailRes && mailRes.ok) {
-                const mailData = await mailRes.json().catch(() => ({}));
-                mailed = mailData.success !== false;
-            }
         } catch (_) {
             saved = false;
+            mailed = false;
         }
 
+        form.dataset.sending = '';
+        submit.disabled = false;
+        submit.textContent = 'Send request →';
+
         if (!saved && !mailed) {
-            const mailto = `mailto:ava.magomed@gmail.com?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
-            window.location.href = mailto;
+            fail(3, 'We could not send the request. Try again or email ava.magomed@gmail.com.');
+            return;
+        }
+
+        if (form.dataset.converted !== transactionId) {
+            reportLeadConversion(transactionId);
+            form.dataset.converted = transactionId;
         }
 
         formSteps.forEach((el) => el.classList.remove('is-active'));
