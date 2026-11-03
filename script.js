@@ -170,12 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
             saved = false;
         }
 
-        fetch('https://formsubmit.co/ajax/ava.magomed@gmail.com', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(payload),
-        }).catch(() => {});
-
         if (!saved) {
             const mailto = `mailto:ava.magomed@gmail.com?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailto;
