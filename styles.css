@@ -15,6 +15,10 @@
     box-sizing: border-box;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -1074,7 +1078,31 @@ body {
 
 .form-success p {
     color: var(--gray);
-    margin-bottom: 12px;
+    margin-bottom: 18px;
+}
+
+.form-success .btn-link,
+.request-form .btn-link {
+    background: transparent;
+    color: var(--blue);
+    font: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 0;
+    border-radius: 0;
+    text-decoration: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-success .btn-link:hover,
+.request-form .btn-link:hover {
+    background: transparent;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transform: none;
+    box-shadow: none;
 }
 
 .hp {
