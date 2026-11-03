@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
                     body: JSON.stringify(payload),
                 }),
-                fetch('https://formsubmit.co/ajax/hello@ava-it.studio', {
+                fetch('https://formsubmit.co/ajax/ava.magomed@gmail.com', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
                     body: JSON.stringify(payload),
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (!saved && !mailed) {
-            const mailto = `mailto:hello@ava-it.studio?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
+            const mailto = `mailto:ava.magomed@gmail.com?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailto;
         }
 
