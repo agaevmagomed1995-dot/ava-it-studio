@@ -159,18 +159,47 @@ document.addEventListener('DOMContentLoaded', () => {
         ].join('\n');
 
         let saved = false;
+        let mailed = false;
         try {
-            const leadRes = await fetch('/api/lead', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify(payload),
-            });
+            const mailController = new AbortController();
+            const mailTimer = setTimeout(() => mailController.abort(), 8000);
+            const [leadRes, mailRes] = await Promise.all([
+                fetch('/api/lead', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify(payload),
+                }),
+                fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    signal: mailController.signal,
+                    body: JSON.stringify({
+                        access_key: '7621f476-7d24-4f65-b945-1d391fc9c612',
+                        subject: payload._subject,
+                        from_name: 'AVA IT Studio',
+                        name: payload.name,
+                        email: payload.email,
+                        phone: payload.phone || '—',
+                        company: payload.company || '—',
+                        services: payload.services || '—',
+                        timeline: payload.timeline || '—',
+                        website: payload.website || '—',
+                        contact: payload.contact || '—',
+                        message: body,
+                    }),
+                }).catch(() => null),
+            ]);
+            clearTimeout(mailTimer);
             saved = leadRes.ok;
+            if (mailRes && mailRes.ok) {
+                const mailData = await mailRes.json().catch(() => ({}));
+                mailed = mailData.success !== false;
+            }
         } catch (_) {
             saved = false;
         }
 
-        if (!saved) {
+        if (!saved && !mailed) {
             const mailto = `mailto:ava.magomed@gmail.com?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailto;
         }
