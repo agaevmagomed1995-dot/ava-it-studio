@@ -159,27 +159,24 @@ document.addEventListener('DOMContentLoaded', () => {
         ].join('\n');
 
         let saved = false;
-        let mailed = false;
         try {
-            const [leadRes, mailRes] = await Promise.all([
-                fetch('/api/lead', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                    body: JSON.stringify(payload),
-                }),
-                fetch('https://formsubmit.co/ajax/ava.magomed@gmail.com', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                    body: JSON.stringify(payload),
-                }),
-            ]);
+            const leadRes = await fetch('/api/lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify(payload),
+            });
             saved = leadRes.ok;
-            mailed = mailRes.ok;
         } catch (_) {
             saved = false;
         }
 
-        if (!saved && !mailed) {
+        fetch('https://formsubmit.co/ajax/ava.magomed@gmail.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(payload),
+        }).catch(() => {});
+
+        if (!saved) {
             const mailto = `mailto:ava.magomed@gmail.com?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailto;
         }
