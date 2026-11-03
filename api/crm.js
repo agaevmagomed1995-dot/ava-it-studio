@@ -1,5 +1,5 @@
 import { isAuthed } from '../lib/auth.js';
-import { dayKey, readState, writeState } from '../lib/store.js';
+import { dayKey, deleteLeadRecord, listLeadRecords, readState, saveLeadRecord, writeState } from '../lib/store.js';
 
 function body(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -34,30 +34,26 @@ function sum(state, keys) {
 export default async function handler(req, res) {
   if (!isAuthed(req)) return res.status(401).json({ ok: false });
   const state = await readState();
-  const demo = state.leads.some((item) => item.email === 'test@avaitstudio.ae');
-  if (demo) {
-    state.leads = state.leads.filter((item) => item.email !== 'test@avaitstudio.ae');
-    state.days = {};
-    state.seen = {};
-    await writeState(state);
-  }
+  let leads = await listLeadRecords();
 
   if (req.method === 'POST') {
     const data = body(req);
     if (data.action !== 'delete') return res.status(400).json({ ok: false });
-    const before = state.leads.length;
+    await deleteLeadRecord(data.id);
     state.leads = state.leads.filter((item) => item.id !== data.id);
-    if (state.leads.length === before) return res.status(404).json({ ok: false });
     await writeState(state);
     return res.status(200).json({ ok: true });
   }
 
   if (req.method === 'PATCH') {
     const data = body(req);
-    const lead = state.leads.find((item) => item.id === data.id);
+    const lead = leads.find((item) => item.id === data.id);
     if (!lead) return res.status(404).json({ ok: false });
     if (STATUSES.has(data.status)) lead.status = data.status;
     if (typeof data.note === 'string') lead.note = data.note.slice(0, 2000);
+    await saveLeadRecord(lead);
+    const index = state.leads.findIndex((item) => item.id === lead.id);
+    if (index >= 0) state.leads[index] = lead;
     await writeState(state);
     return res.status(200).json({ ok: true, lead });
   }
@@ -80,6 +76,6 @@ export default async function handler(req, res) {
       uniques: state.days[key]?.uniques || 0,
       leads: state.days[key]?.leads || 0,
     })),
-    leads: state.leads,
+    leads,
   });
 }
