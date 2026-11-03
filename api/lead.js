@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { dayKey, readState, touchDay, writeState } from '../lib/store.js';
+import { dayKey, readState, saveLeadRecord, touchDay, writeState } from '../lib/store.js';
 
 function body(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -21,7 +21,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false });
   }
 
-  const state = await readState();
   const now = Date.now();
   const lead = {
     id: crypto.randomBytes(8).toString('hex'),
@@ -38,9 +37,14 @@ export default async function handler(req, res) {
     status: 'new',
     note: '',
   };
-  state.leads.unshift(lead);
-  state.leads = state.leads.slice(0, 500);
-  touchDay(state, dayKey(now)).leads += 1;
-  await writeState(state);
+  await saveLeadRecord(lead);
+  try {
+    const state = await readState();
+    state.leads = [lead, ...state.leads.filter((item) => item.id !== lead.id)].slice(0, 500);
+    touchDay(state, dayKey(now)).leads += 1;
+    await writeState(state);
+  } catch {
+    /* the lead file is already saved */
+  }
   res.status(200).json({ ok: true });
 }
