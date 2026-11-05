@@ -20,6 +20,22 @@ function rangeDays(days, today) {
   return list;
 }
 
+function distinct(state, keys, type) {
+  const allow = new Set(keys);
+  const ids = new Set();
+  for (const mark of Object.keys(state.seen || {})) {
+    const first = mark.indexOf(':');
+    const second = mark.indexOf(':', first + 1);
+    if (first < 0 || second < 0) continue;
+    const day = mark.slice(0, first);
+    const kind = mark.slice(first + 1, second);
+    const vid = mark.slice(second + 1);
+    if (kind !== type || !allow.has(day) || !vid) continue;
+    ids.add(vid);
+  }
+  return ids.size;
+}
+
 function sum(state, keys) {
   return keys.reduce((acc, key) => {
     const day = state.days[key] || {};
@@ -72,13 +88,17 @@ export default async function handler(req, res) {
     periods[name].leads = leads.filter((lead) => keys.includes(dayKey(lead.createdAt))).length;
   }
   periods.all.leads = leads.length;
+  for (const [name, keys] of [['7', week], ['30', month], ['all', allKeys]]) {
+    periods[name].uniques = distinct(state, keys, 'view');
+    periods[name].starts = distinct(state, keys, 'start');
+  }
   res.status(200).json({
     ok: true,
     today,
     periods,
     series: month.map((key) => ({
       day: key.slice(5),
-      uniques: state.days[key]?.uniques || 0,
+      uniques: distinct(state, [key], 'view'),
       leads: leads.filter((lead) => dayKey(lead.createdAt) === key).length,
     })),
     leads,
